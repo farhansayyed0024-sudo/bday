@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Happy Birthday, Anu</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="dark light" />
+  <meta name="theme-color" content="#0b1020" />
+  <style>
+    :root{
+      --bg: radial-gradient(1200px 800px at 50% 20%, #101733 0%, #0b1020 55%, #090d18 100%);
+      --ink:#e7ecf5;
+      --muted:#a8b1c6;
+      --accent:#ff6fa0;
+      --card: rgba(255,255,255,0.06);
+      --blur: blur(16px);
+      --shadow: 0 14px 40px rgba(0,0,0,0.55);
+      --glow: 0 0 22px rgba(124,163,255,0.28);
+    }
+    *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+    html,body{height:100%}
+    body{
+      margin:0; color:var(--ink); background:var(--bg);
+      font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans";
+      overflow:hidden;
+    }
+    .stage{ position:relative; width:100%; height:100vh; display:flex; align-items:center; justify-content:center; }
+    .scene{
+      position:absolute; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column; padding:22px;
+      opacity:0; transform: translateY(12px) scale(0.98); pointer-events:none; transition: opacity .7s ease, transform .7s ease;
+    }
+    .scene.active{opacity:1; transform: translateY(0) scale(1); pointer-events:auto;}
+    .card{
+      width:min(92vw, 560px); min-height: 46vh; padding: 26px 20px; border-radius: 22px; background: var(--card);
+      backdrop-filter: var(--blur); box-shadow: var(--shadow); text-align:center; position:relative; border:1px solid rgba(255,255,255,0.06);
+    }
+    h1{margin: 0 0 10px; font-size: clamp(26px, 7vw, 42px); letter-spacing: .3px; text-shadow: var(--glow);}
+    p{margin: 8px 0; font-size: clamp(14px, 3.9vw, 18px); color: var(--muted); line-height: 1.45;}
+    .em{color:#ffd480; font-weight:700; letter-spacing:.5px; text-shadow: 0 0 10px rgba(255,212,128,0.25);}
+    .sub{font-size: clamp(12px, 3.5vw, 16px); color: var(--muted)}
+    .spacer{height:12px}
+
+    /* Ambient stars */
+    .sparkles{position:absolute; inset:0; pointer-events:none; overflow:hidden;}
+    .sparkles i{
+      position:absolute; width:6px; height:6px; border-radius:50%; background: radial-gradient(circle, rgba(255,255,255,0.9), rgba(255,255,255,0) 70%);
+      animation: float 8s linear infinite; opacity:.35; filter: drop-shadow(0 0 8px rgba(130,160,255,.5));
+    }
+    @keyframes float{
+      0%{ transform: translateY(100vh) translateX(0) scale(.8); opacity:.0}
+      10%{opacity:.35}
+      100%{ transform: translateY(-10vh) translateX(20px) scale(1.1); opacity:.0}
+    }
+
+    /* Scene 1 */
+    .blink{ animation: blink 1.15s ease-in-out infinite alternate; }
+    @keyframes blink{
+      from{ transform: scale(1); filter: drop-shadow(0 0 0 rgba(124,163,255,0)); }
+      to{ transform: scale(1.04); filter: drop-shadow(0 6px 18px rgba(124,163,255,.35)); }
+    }
+
+    /* Scene 2: fireworks surface */
+    #fwCanvas{ width:100%; height:54vh; border-radius:16px;
+      background: radial-gradient(900px 500px at 50% 100%, rgba(255,255,255,.06), rgba(255,255,255,.02) 60%, rgba(255,255,255,0) 100%);
+      border:1px solid rgba(255,255,255,0.06);
+    }
+
+    /* Scene 3: cake + candle (SVG) */
+    .cakeWrap{ display:flex; align-items:center; justify-content:center; height: 44vh; }
+    #cakeSvg{ width:min(70vw, 360px); height:auto; display:block; filter: drop-shadow(0 8px 26px rgba(0,0,0,.45)); }
+    .flameGroup{ transform-origin: center bottom; animation: flicker .12s infinite alternate ease-in-out; }
+    @keyframes flicker{ from{ transform: translateX(0) scale(1) rotate(-1.2deg) } to{ transform: translateX(.8px) scale(1.05) rotate(1.4deg) } }
+    .off .flameGroup{ opacity:0; filter:none; animation:none; }
+    .smoke{ opacity:0; }
+    .off .smoke{ opacity:1; }
+    @keyframes smokeUp{ 0%{ transform: translateY(0) scale(.8); opacity:0 } 30%{ opacity:.25 } 100%{ transform: translateY(-38px) scale(1.2); opacity:0 } }
+
+    /* Scene 4 */
+    .quote{ font-size: clamp(14px, 4.2vw, 18px); color:#c9d2ea; margin-top: 10px;}
+
+    /* Scene 5: your image with visible tiny text below */
+    .finalImg{
+      display:flex; align-items:center; justify-content:center; height:42vh; position:relative; flex-direction:column; gap:10px;
+    }
+    .finalImg img{
+      width:min(80vw, 420px); max-height: 40vh; object-fit: contain; border-radius: 18px;
+      background: rgba(255,255,255,0.04); box-shadow: 0 12px 30px rgba(0,0,0,.45), 0 0 22px rgba(124,163,255,0.18);
+    }
+    .tiny{
+      position:relative; font-size: 10px; letter-spacing: 3.5px; color: rgba(231,236,245,0.22); user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="sparkles" aria-hidden="true"></div>
+
+    <!-- Scene 1 -->
+    <section id="s1" class="scene active">
+      <div class="card">
+        <h1 class="blink">⏰🌙  IT'S 12 am</h1>
+        <p class="sub">Shhh… let the night glow softly for you.</p>
+      </div>
+    </section>
+
+    <!-- Scene 2 -->
+    <section id="s2" class="scene">
+      <div class="card">
+        <h1>Celebrate this moment 🎆✨</h1>
+        <p class="sub">Firecrackers for the brightest soul.</p>
+        <div class="spacer"></div>
+        <canvas id="fwCanvas"></canvas>
+      </div>
+    </section>
+
+    <!-- Scene 3 -->
+    <section id="s3" class="scene">
+      <div class="card">
+        <h1 class="em">🕯️ BLOW THE CANDLE</h1>
+        <p class="sub">Make a wish before it fades.</p>
+        <div class="spacer"></div>
+        <div class="cakeWrap">
+          <svg id="cakeSvg" viewBox="0 0 300 220" aria-label="Birthday cake with candle">
+            <defs>
+              <radialGradient id="plateGrad" cx="50%" cy="50%" r="60%">
+                <stop offset="0%" stop-color="#c7d1e9" stop-opacity="0.6"/>
+                <stop offset="100%" stop-color="#8c99b8" stop-opacity="0.15"/>
+              </radialGradient>
+              <linearGradient id="cakeBody" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#f2b3c8"/><stop offset="100%" stop-color="#d67aa0"/>
+              </linearGradient>
+              <linearGradient id="frostTop" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#f6e8f2"/>
+              </linearGradient>
+              <linearGradient id="wax" x1="0" x2="1" y1="0" y2="0">
+                <stop offset="0%" stop-color="#fff0b8"/><stop offset="100%" stop-color="#ffd773"/>
+              </linearGradient>
+              <linearGradient id="stripe" x1="0" x2="1" y1="0" y2="0">
+                <stop offset="0%" stop-color="#ff9fb0"/><stop offset="100%" stop-color="#ff6a8a"/>
+              </linearGradient>
+              <radialGradient id="flameGrad" cx="50%" cy="40%" r="60%">
+                <stop offset="0%" stop-color="#fff7d0"/><stop offset="45%" stop-color="#ffd36b"/><stop offset="90%" stop-color="#ff8b2b"/><stop offset="100%" stop-color="rgba(255,139,43,0)"/>
+              </radialGradient>
+              <filter id="flameBlur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur in="SourceGraphic" stdDeviation="1.6" /></filter>
+            </defs>
+            <ellipse cx="150" cy="200" rx="110" ry="16" fill="url(#plateGrad)" />
+            <rect x="60" y="110" rx="16" ry="16" width="180" height="70" fill="url(#cakeBody)" />
+            <path d="M70,110 h160 a16,16 0 0 1 16,16 v8 H54 v-8 a16,16 0 0 1 16,-16 z" fill="url(#frostTop)" opacity="0.95"/>
+            <path d="M60,134 c10,12 14,6 18,0 c10,16 16,6 20,0 c10,18 16,6 20,0 c10,16 16,6 20,0 c10,18 16,6 20,0 c10,16 16,6 20,0 c10,18 16,6 20,0 c10,16 16,6 20,0" fill="#fff" opacity="0.9"/>
+            <g id="candle" transform="translate(150,80)">
+              <rect x="-7" y="0" width="14" height="54" rx="6" fill="url(#wax)" />
+              <path d="M-2,28 c2,6 2,10 0,14" stroke="#ffd36b" stroke-width="2" fill="none" opacity=".6"/>
+              <path d="M-7,8 h14 M-7,16 h14 M-7,24 h14 M-7,32 h14 M-7,40 h14" stroke="url(#stripe)" stroke-width="3" opacity=".85" />
+              <rect x="-1" y="-6" width="2" height="8" fill="#3b3b3b" rx="1"/>
+              <g class="flameGroup"><ellipse cx="0" cy="-16" rx="7" ry="11" fill="url(#flameGrad)" filter="url(#flameBlur)"/><ellipse cx="0" cy="-16" rx="3.5" ry="6" fill="#fff7e6" opacity=".7"/></g>
+              <g class="smoke">
+                <circle cx="0" cy="-18" r="2" fill="rgba(190,200,210,0.22)" style="animation: smokeUp 1.6s linear infinite; animation-delay:.0s"/>
+                <circle cx="-3" cy="-22" r="2.4" fill="rgba(190,200,210,0.18)" style="animation: smokeUp 1.8s linear infinite; animation-delay:.3s"/>
+                <circle cx="2" cy="-26" r="2.8" fill="rgba(190,200,210,0.16)" style="animation: smokeUp 2.1s linear infinite; animation-delay:.6s"/>
+              </g>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scene 4 -->
+    <section id="s4" class="scene">
+      <div class="card">
+        <h1> HAPPIEST BIRTHDAY ANU DARLING ❤️🎂</h1>
+        <p class="quote">May your curiosity stay bright and your courage stay kind; the world feels warmer whenever you walk in.</p>
+      </div>
+    </section>
+
+    <!-- Scene 5 -->
+    <section id="s5" class="scene">
+      <div class="card">
+        <h1>FOR YOU MOTEEEE 🌹</h1>
+        <div class="finalImg">
+          <!-- Put cat.jpg next to this HTML or use your hosted URL -->
+          <img src="cat.jpg" alt="Cute cat with a bouquet of roses" loading="eager" />
+          <div class="tiny">Love uhhhhh.....</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Ambient twinkles
+    const sparkleHost = document.querySelector('.sparkles');
+    for(let i=0;i<28;i++){
+      const d = document.createElement('i');
+      d.style.left = Math.random()*100 + 'vw';
+      d.style.animationDuration = (6 + Math.random()*8) + 's';
+      d.style.animationDelay = (-Math.random()*8) + 's';
+      sparkleHost.appendChild(d);
+    }
+
+    // Scene controller
+    const scenes = ['s1','s2','s3','s4','s5'].map(id=>document.getElementById(id));
+    const show = (i)=>scenes.forEach((s,idx)=>s.classList.toggle('active', idx===i));
+
+    // ===== Fireworks (faster, denser, timestamp‑driven) =====
+    const fw = (()=> {
+      const c = document.getElementById('fwCanvas');
+      const ctx = c.getContext('2d', { alpha: true });
+
+      let rockets = [];
+      let particles = [];
+      let running = false;
+      let last = 0;
+
+      // Multiple rockets per second, bursty start
+      let SPAWN_RPS = 12;     // density; raise to 14–16 if you want even more
+      let spawnAcc = 0;
+      let coldStart = 900;    // ms: initial burst period
+
+      function resize(){
+        const r = c.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        c.width  = Math.floor(r.width  * dpr);
+        c.height = Math.floor(r.height * dpr);
+        ctx.setTransform(1,0,0,1,0,0);
+        ctx.scale(dpr, dpr);
+      }
+
+      class Rocket{
+        constructor(){
+          const w = c.clientWidth, h = c.clientHeight;
+          this.x = w*(0.15 + 0.70*Math.random());
+          this.y = h + 6;
+          this.vx = (Math.random()-0.5)*1.6;
+          this.vy = -(6.2 + 2.2*Math.random());    // faster ascent
+          this.ay = -0.012;                        // stronger upward accel
+          this.color = `hsl(${Math.floor(Math.random()*360)} 90% 60%)`;
+          this.targetY = h*(0.30 + Math.random()*0.14); // explode higher
+          this.history = [];
+          this.life = 900 + Math.random()*450;
+          this.age = 0;
+        }
+        step(dt){
+          const k = dt/16;
+          this.age += dt;
+          this.x += this.vx*k;
+          this.y += this.vy*1.2*k;
+          this.vy += this.ay*k;
+          this.history.push([this.x,this.y]);
+          if(this.history.length>10) this.history.shift();
+          return (this.vy>-0.15) || (this.y<=this.targetY) || (this.age>this.life);
+        }
+        draw(){
+          ctx.lineCap = 'round';
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = this.color;
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = this.color;
+          ctx.beginPath();
+          for(let i=0;i<this.history.length-1;i++){
+            const p0=this.history[i], p1=this.history[i+1];
+            ctx.moveTo(p0[0], p0[1]); ctx.lineTo(p1[0], p1[1]);
+          }
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+        }
+      }
+
+      class Particle{
+        constructor(x,y,baseHue,type='peony'){
+          const angle = Math.random()*Math.PI*2;
+          const speed = (type==='willow' ? 2.0 + Math.random()*1.6
+                                         : type==='ring'  ? 2.6 + Math.random()*0.6
+                                                          : 3.1 + Math.random()*1.9);
+          this.x=x; this.y=y;
+          this.vx = Math.cos(angle)*speed*(1+0.15*Math.random());
+          this.vy = Math.sin(angle)*speed*(1+0.15*Math.random());
+          if(type==='ring'){ const r = 2.8 + Math.random()*0.6; this.vx=Math.cos(angle)*r; this.vy=Math.sin(angle)*r; }
+          this.drag = 0.982;
+          this.gravity = 0.045;
+          this.life = 650 + Math.random()*700;
+          this.age = 0;
+          const hueVar = baseHue + (Math.random()*26-13);
+          this.color = `hsl(${Math.floor((hueVar+360)%360)} 95% 65%)`;
+          this.size = 1.3 + Math.random()*1.4;
+          this.twinkle = Math.random()<0.3;
+        }
+        step(dt){
+          const k = dt/16;
+          this.age += dt;
+          this.vx *= this.drag;
+          this.vy = this.vy*this.drag + this.gravity*k;
+          this.x += this.vx*k;
+          this.y += this.vy*k;
+          return this.age < this.life;
+        }
+        draw(){
+          const t = 1 - (this.age/this.life);
+          const alpha = Math.max(0, t*t*(this.twinkle? (0.6+0.4*Math.sin(this.age*0.025)) : 1));
+          ctx.globalAlpha = alpha;
+          ctx.fillStyle = this.color;
+          ctx.shadowBlur = 18;
+          ctx.shadowColor = this.color;
+          ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill();
+          ctx.shadowBlur = 0;
+          ctx.globalAlpha = alpha*0.35;
+          ctx.beginPath(); ctx.arc(this.x, this.y, this.size*3.1, 0, Math.PI*2); ctx.fill();
+          ctx.globalAlpha = 1;
+        }
+      }
+
+      function explode(x,y,hue){
+        const types = ['peony','ring','willow'];
+        const type = types[Math.floor(Math.random()*types.length)];
+        const count = type==='ring' ? 180 : type==='willow' ? 240 : 220;
+        for(let i=0;i<count;i++) particles.push(new Particle(x,y,hue,type));
+      }
+
+      function launch(n=1){
+        for(let i=0;i<n;i++) rockets.push(new Rocket());
+      }
+
+      function step(ts){
+        if(!last){
+          last = ts;
+          // cold start: immediate burst so it never feels idle
+          launch(3);
+        }
+        const dt = ts - last; // use true timestamp dt
+        last = ts;
+
+        // fade for trails; lighter fade keeps momentum vivid
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.fillStyle = 'rgba(5,8,16,0.18)';
+        ctx.fillRect(0,0,c.clientWidth,c.clientHeight);
+
+        // deterministic spawns per real time
+        const rps = SPAWN_RPS + (coldStart>0 ? 6 : 0); // temporary boost at start
+        spawnAcc += (dt/1000)*rps;
+        while (spawnAcc >= 1){ launch(); spawnAcc -= 1; }
+        coldStart = Math.max(0, coldStart - dt);
+
+        // additive glow
+        ctx.globalCompositeOperation = 'lighter';
+
+        const nextR=[];
+        for(const r of rockets){
+          const boom = r.step(dt);
+          r.draw();
+          if(boom){
+            const hue = parseInt(r.color.match(/\d+/)[0]||Math.floor(Math.random()*360),10);
+            explode(r.x,r.y,hue);
+          } else nextR.push(r);
+        }
+        rockets = nextR;
+
+        const nextP=[];
+        for(const p of particles){ if(p.step(dt)){ p.draw(); nextP.push(p); } }
+        particles = nextP;
+
+        if(running) requestAnimationFrame(step);
+      }
+
+      function start(){ if(running) return; running = true; resize(); last = 0; spawnAcc=0; coldStart=900; requestAnimationFrame(step); }
+      function stop(){ running = false; }
+
+      window.addEventListener('resize', resize, {passive:true});
+      return {start, stop, resize};
+    })();
+
+    // Timeline: S1 3.6s -> S2 4.8s -> S3 blow -> S4 12s -> S5
+    show(0);
+    setTimeout(()=>{ show(1); fw.start(); }, 3600);
+    setTimeout(()=>{ fw.stop(); show(2); }, 3600+4800);
+    setTimeout(()=>{ document.getElementById('cakeSvg').classList.add('off'); }, 3600+4800+3800);
+    setTimeout(()=>{ show(3); }, 3600+4800+5600);
+    setTimeout(()=>{ show(4); }, 3600+4800+5600+12000);
+
+    // Keep canvas crisp on rotation/resize when visible
+    const obs = new ResizeObserver(()=>{ if(scenes[1].classList.contains('active')){ fw.resize(); }});
+    obs.observe(document.body);
+  </script>
+</body>
+</html>
